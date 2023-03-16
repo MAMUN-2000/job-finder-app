@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as fetches from "../../features/jobs/jobsSlice";
 import { useNavigate } from "react-router-dom";
 const arr = [
@@ -19,12 +19,12 @@ const arr = [
   "MERN Stack Developer",
 ];
 
-function JobAddForm() {
+function EditForm() {
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
   const [salary, setSalary] = useState("");
   const [deadline, setDeadline] = useState("");
-
+  const { updated } = useSelector((s) => s.jobs);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const reset = () => {
@@ -34,10 +34,20 @@ function JobAddForm() {
     setSalary("");
   };
 
+  useEffect(() => {
+    const { title, salary, deadline, id, type } = updated;
+
+    if (id) {
+      setTitle(title);
+      setDeadline(deadline);
+      setSalary(salary);
+      setType(type);
+    }
+  }, [updated]);
+
   const handleForm = (e) => {
     e.preventDefault();
     const uId = Date.now().toString() + Math.random().toString().slice(3);
-
     const data = {
       title,
       type,
@@ -46,7 +56,7 @@ function JobAddForm() {
       id: uId,
     };
 
-    dispatch(fetches.addJob(data));
+    dispatch(fetches.updateJob({ data, id: updated.id }));
     reset();
     navigate("/");
   };
@@ -131,11 +141,11 @@ function JobAddForm() {
           id="lws-submit"
           className="cursor-pointer btn btn-primary w-fit"
         >
-          Submit
+          Edit
         </button>
       </div>
     </form>
   );
 }
 
-export default JobAddForm;
+export default EditForm;

@@ -1,49 +1,63 @@
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-
+import * as fetches from "../../features/jobs/jobsSlice";
 function Sidebar() {
+  const dispatch = useDispatch();
+
+  const renderOnType = (type) => {
+    dispatch(fetches.filterJobType({ type }));
+  };
+  const renderAllJobs = () => {
+    dispatch(fetches.fetchJobs());
+  };
+
   return (
     <div className="sidebar">
       <nav>
         <ul className="space-y-4">
           <li>
-            <a
-              href="/jobs"
+            <Link
+              to={"/"}
+              onClick={renderAllJobs}
               className="main-menu menu-active"
               id="lws-alljobs-menu"
             >
               <i className="fa-solid fa-briefcase"></i>
               <span> All Available Jobs</span>
-            </a>
+            </Link>
             <ul className="space-y-6 lg:space-y-2 ">
               <li>
-                <a
+                <Link
                   className="sub-menu"
-                  href="/jobs/internship"
+                  to={"/"}
                   id="lws-internship-menu"
+                  onClick={() => renderOnType("Internship")}
                 >
                   <i className="fa-solid fa-stop !text-[#FF5757]"></i>
                   Internship
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   className="sub-menu"
-                  href="/jobs/fulltime"
+                  to={"/"}
                   id="lws-fulltime-menu"
+                  onClick={() => renderOnType("Full Time")}
                 >
                   <i className="fa-solid fa-stop !text-[#FF8A00]"></i>
                   Full Time
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
+                  onClick={() => renderOnType("Remote")}
                   className="sub-menu"
-                  href="/jobs/remote"
+                  to={"/"}
                   id="lws-remote-menu"
                 >
                   <i className="fa-solid fa-stop !text-[#56E5C4]"></i>
                   Remote
-                </a>
+                </Link>
               </li>
             </ul>
           </li>
